@@ -116,7 +116,7 @@ body {
 }
 
 /* ── Scroll Indicator ── */
-.scroll-indicator {
+.scroll-nav {
   position: fixed;
   bottom: 2rem;
   left: 50%;
@@ -126,18 +126,29 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-  opacity: 1;
-  transition: opacity 0.6s ease;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0.75rem;
+  transition: opacity 0.4s ease;
 }
 
-.scroll-indicator.hidden { opacity: 0; pointer-events: none; }
+.scroll-nav:hover .scroll-arrow {
+  border-color: var(--color-cream);
+}
 
-.scroll-indicator span {
+.scroll-nav:hover .scroll-nav-label {
+  opacity: 1 !important;
+}
+
+.scroll-nav-label {
   font-family: var(--font-body);
   font-size: 0.7rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--color-gold);
+  transition: opacity 0.3s ease;
+  pointer-events: none;
 }
 
 .scroll-arrow {
@@ -147,11 +158,21 @@ body {
   border-bottom: 2px solid var(--color-gold);
   transform: rotate(45deg);
   animation: scrollBounce 2s ease-in-out infinite;
+  transition: border-color 0.3s ease;
+}
+
+.scroll-nav.flipped .scroll-arrow {
+  animation: scrollBounceUp 2s ease-in-out infinite;
 }
 
 @keyframes scrollBounce {
   0%, 100% { transform: rotate(45deg) translateY(0); opacity: 1; }
   50% { transform: rotate(45deg) translateY(6px); opacity: 0.4; }
+}
+
+@keyframes scrollBounceUp {
+  0%, 100% { transform: rotate(-135deg) translateY(0); opacity: 1; }
+  50% { transform: rotate(-135deg) translateY(6px); opacity: 0.4; }
 }
 
 /* ── Section Base ── */
@@ -1016,12 +1037,12 @@ body {
   </svg>
 </button>
 
-<!-- Scroll Indicator -->
-<div class="scroll-indicator" id="scrollIndicator">
-  <span class="lang-es" lang="es">Desliza hacia abajo</span>
-  <span class="lang-en" lang="en">Scroll down</span>
+<!-- Floating Section Navigator -->
+<button class="scroll-nav" id="scrollNav" aria-label="Navigate to next section">
+  <span class="scroll-nav-label lang-es" lang="es">Desliza hacia abajo</span>
+  <span class="scroll-nav-label lang-en" lang="en">Scroll down</span>
   <div class="scroll-arrow"></div>
-</div>
+</button>
 
 <!-- ═══════════════════════════════════════
      ACT 1 — THE HOOK
@@ -1058,7 +1079,7 @@ body {
 <!-- ═══════════════════════════════════════
      ACT 2 — THE PROBLEM
      ═══════════════════════════════════════ -->
-<section class="section problem-section">
+<section class="section problem-section" id="problem">
   <div class="problem-inner">
     <p class="section-number reveal">
       <span class="lang-es" lang="es">El desafío</span>
@@ -1130,7 +1151,7 @@ body {
 <!-- ═══════════════════════════════════════
      ACT 3 — THE VISION
      ═══════════════════════════════════════ -->
-<section class="section vision-section">
+<section class="section vision-section" id="vision">
   <div class="vision-hero">
     <div class="vision-hero-overlay"></div>
     <div class="vision-hero-content reveal-scale">
@@ -1244,7 +1265,7 @@ body {
 <!-- ═══════════════════════════════════════
      ACT 4 — THE EVIDENCE
      ═══════════════════════════════════════ -->
-<section class="section evidence-section">
+<section class="section evidence-section" id="evidence">
   <div class="evidence-inner">
     <p class="section-number reveal">
       <span class="lang-es" lang="es">La hoja de ruta</span>
@@ -1432,7 +1453,7 @@ body {
 <!-- ═══════════════════════════════════════
      ACT 5 — THE ASK
      ═══════════════════════════════════════ -->
-<section class="section ask-section">
+<section class="section ask-section" id="ask">
   <div class="ask-overlay"></div>
   <div class="ask-content">
     <h2 class="ask-title reveal">
@@ -1571,11 +1592,31 @@ window.addEventListener('scroll', () => {
   const progress = (scrollTop / docHeight) * 100;
   document.getElementById('progressBar').style.width = progress + '%';
 
-  // Hide scroll indicator after first scroll
-  if (scrollTop > 100) {
-    document.getElementById('scrollIndicator').classList.add('hidden');
+  // Update floating nav chevron — flip when near bottom
+  const scrollNav = document.getElementById('scrollNav');
+  const nearBottom = scrollTop + window.innerHeight >= document.documentElement.scrollHeight - 100;
+  const labelEs = scrollNav.querySelector('.lang-es');
+  const labelEn = scrollNav.querySelector('.lang-en');
+  if (nearBottom) {
+    scrollNav.classList.add('flipped');
+    scrollNav.setAttribute('aria-label', 'Back to top');
+    labelEs.textContent = 'Volver arriba';
+    labelEn.textContent = 'Back to top';
   } else {
-    document.getElementById('scrollIndicator').classList.remove('hidden');
+    scrollNav.classList.remove('flipped');
+    scrollNav.setAttribute('aria-label', 'Navigate to next section');
+    labelEs.textContent = 'Siguiente';
+    labelEn.textContent = 'Next';
+  }
+  // Hide label after scrolling past hero
+  if (scrollTop > 100) {
+    labelEs.style.opacity = '0';
+    labelEn.style.opacity = '0';
+  } else {
+    labelEs.style.opacity = '1';
+    labelEn.style.opacity = '1';
+    labelEs.textContent = 'Desliza hacia abajo';
+    labelEn.textContent = 'Scroll down';
   }
 });
 
@@ -1637,6 +1678,32 @@ function animateCounter(el, target, suffix) {
   }
   requestAnimationFrame(update);
 }
+
+// ── Floating Section Navigator ──
+const navSections = ['hero', 'problem', 'vision', 'evidence', 'ask'];
+
+document.getElementById('scrollNav').addEventListener('click', function() {
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  const nearBottom = scrollTop + window.innerHeight >= document.documentElement.scrollHeight - 100;
+
+  if (nearBottom) {
+    // At bottom — scroll to top
+    document.getElementById('hero').scrollIntoView({ behavior: 'smooth' });
+    return;
+  }
+
+  // Find the next section below current scroll position
+  for (let i = 0; i < navSections.length; i++) {
+    const el = document.getElementById(navSections[i]);
+    if (!el) continue;
+    const top = el.getBoundingClientRect().top;
+    // If this section's top is more than 50px below viewport top, scroll to it
+    if (top > 50) {
+      el.scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+  }
+});
 </script>
 </body>
 </html>
