@@ -1407,7 +1407,7 @@ body {
     </div>
 
     <!-- Roles -->
-    <div class="roles-section">
+    <div class="roles-section" id="team">
       <p class="section-number reveal" style="text-align:center;">
         <span class="lang-es" lang="es">El equipo</span>
         <span class="lang-en" lang="en">The team</span>
@@ -1681,7 +1681,7 @@ function animateCounter(el, target, suffix) {
 }
 
 // ── Floating Section Navigator ──
-const navSections = ['hero', 'problem', 'vision', 'evidence', 'ask'];
+const navSections = ['hero', 'problem', 'vision', 'evidence', 'team', 'ask'];
 
 document.getElementById('scrollNav').addEventListener('click', function() {
   const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
