@@ -1,0 +1,110 @@
+---
+# =============================================================================
+# PORTFOLIO.md — BioJalisco Pitch Site
+# =============================================================================
+portfolio_enabled: true
+portfolio_priority: 4
+portfolio_featured: true
+portfolio_last_reviewed: "2026-03-04"
+
+title: "BioJalisco — Biodiversity Atlas Pitch Site"
+tagline: "Cinematic scrollytelling site pitching a citizen-science biodiversity platform for western Mexico"
+slug: "biojalisco-pitch"
+
+category: "Client Work"
+target_audience: "Conservation stakeholders, academic partners, and potential collaborators in Mexico"
+tags:
+  - "scrollytelling"
+  - "biodiversity"
+  - "citizen-science"
+  - "bilingual"
+  - "conservation"
+  - "jalisco"
+  - "mexico"
+  - "landing-page"
+
+thumbnail: "assets/images/ChatGPT_Image_Mar_4_2026_03_56_16_PM.webp"
+hero_images:
+  - "assets/images/ChatGPT_Image_Mar_4_2026_03_56_16_PM.webp"
+  - "assets/images/ChatGPT_Image_Mar_4_2026_03_54_58_PM.webp"
+  - "assets/images/dra-vero-rosas-lizard.webp"
+demo_video_url: ""
+
+live_url: "https://atlas-biodiversidad-pitch.vercel.app"
+demo_url: "https://atlas-biodiversidad-pitch.vercel.app"
+case_study_url: ""
+
+problem_solved: |
+  Conservation researchers in western Mexico face an asymmetry: deep scientific
+  expertise but limited reach. Their work covers a fraction of Jalisco's 80,000+ km²
+  territory. BioJalisco proposes closing that gap through citizen science and technology,
+  but the vision needed a compelling presentation to win stakeholders and partners.
+
+key_outcomes:
+  - "Self-contained single-file HTML site with 9 embedded images (~1.8MB total)"
+  - "Bilingual ES/EN with instant language switching"
+  - "Cinematic 5-act narrative arc designed for stakeholder persuasion"
+  - "Procedural ambient forest audio via Web Audio API — no audio files"
+  - "Deployed on Vercel with zero build step"
+
+tech_stack:
+  - "HTML5"
+  - "CSS3 (custom properties, grid, flexbox)"
+  - "Vanilla JavaScript"
+  - "Intersection Observer API"
+  - "Web Audio API"
+  - "Google Fonts"
+  - "Vercel"
+  - "Base64 image embedding"
+
+complexity: "Production"
+---
+
+## Overview
+
+BioJalisco is a proposed citizen-science biodiversity monitoring platform for western Mexico. Before building the platform, the project needed a persuasion artifact — a site that communicates the vision with enough emotional and intellectual weight to win over academic partners, conservation organizations, and potential funders.
+
+This scrollytelling site is that artifact. Built as a single self-contained HTML file, it uses a cinematic 5-act story arc (Hook → Problem → Vision → Evidence → Ask) with scroll-triggered animations, parallax photography, ambient forest audio, and bilingual content to make the case for BioJalisco.
+
+Every image is embedded as a base64 data URI, making the site fully portable — it works offline, deploys anywhere, and has zero external dependencies beyond Google Fonts.
+
+## The Challenge
+
+- **The reach problem:** Verónica Rosas-Espinoza has deep expertise in Jalisco's biodiversity, but traditional ecology covers only ~5% of the territory systematically. The pitch needed to make this gap visceral, not abstract.
+- **Dual audience:** The site must work for Spanish-speaking Mexican academics and English-speaking international partners — not as separate pages, but as a seamless bilingual experience.
+- **Persuasion, not information:** This isn't a documentation site. It's a narrative designed to move people from awareness to action. Every section must earn its scroll.
+- **Zero infrastructure:** The site needed to deploy instantly with no build step, no CMS, no backend — just drop a file on Vercel.
+
+## The Solution
+
+**Cinematic narrative structure:**
+A 5-act story arc modeled on screenwriting principles. The hero section poses a provocative question, the problem section makes the data crisis tangible with animated counters, the vision section introduces BioJalisco as the answer, the evidence section builds credibility with a roadmap and proof points (iNaturalist precedent, book trilogy, team credentials), and the closing ask creates urgency.
+
+**Bilingual architecture:**
+A `data-lang` attribute on the body element combined with `.lang-es` / `.lang-en` CSS classes enables instant language switching with zero page reload. All content exists in both languages in the DOM — CSS toggles visibility.
+
+**Self-contained deployment:**
+All 9 images converted from PNG to WebP (88-95% size reduction), then embedded as base64 data URIs. The entire site is a single 1.8MB HTML file with no external asset dependencies.
+
+**Procedural audio:**
+The ambient forest soundscape is generated in real-time using Web Audio API — layered noise filters for wind, oscillators for bird chirps, and a low drone for depth. No audio files needed.
+
+## Technical Highlights
+
+- **Base64 image pipeline:** Python/Pillow batch conversion from PNG to optimized WebP, then base64 encoding — reduced total image payload from 16.8MB to 1.3MB (92% reduction)
+- **Intersection Observer scroll system:** Multiple reveal classes (translate-Y, translate-X, scale) with staggered delays create a choreographed scroll experience without a single animation library
+- **Web Audio API synthesis:** Three-layer procedural soundscape (filtered noise for wind, frequency-modulated oscillators for bird chirps, sine drone for depth) with fade-in/fade-out on toggle
+- **CSS-only parallax:** `background-attachment: fixed` on the vision section creates depth without JavaScript scroll listeners
+- **Animated counters:** Eased counter animations triggered by IntersectionObserver with cubic easing for natural deceleration
+
+## Results
+
+**For the Stakeholder Audience:**
+- Complete narrative pitch accessible in both Spanish and English
+- Credibility elements (PhD photo, book trilogy, fieldwork photography) embedded directly
+- Single URL to share — no login, no app install, works on any device
+
+**Technical Demonstration:**
+- Proves that a high-impact persuasion site doesn't need React, a build system, or a CMS
+- Shows restraint in technology choices — vanilla JS for a project that genuinely doesn't need frameworks
+- Image optimization pipeline that could be reused across CushLabs projects
