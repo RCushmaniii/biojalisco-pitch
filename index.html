@@ -778,6 +778,7 @@ body {
 /* Roles */
 .roles-section {
   margin-top: 5rem;
+  scroll-margin-top: 2rem;
 }
 
 .roles-grid {
@@ -1700,7 +1701,7 @@ document.getElementById('scrollNav').addEventListener('click', function() {
     const top = el.getBoundingClientRect().top;
     // If this section's top is more than 50px below viewport top, scroll to it
     if (top > 50) {
-      el.scrollIntoView({ behavior: 'smooth' });
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       return;
     }
   }
