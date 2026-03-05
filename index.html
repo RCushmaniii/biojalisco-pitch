@@ -292,6 +292,18 @@ body {
   padding: 2rem;
 }
 
+/* Hero text animations paused until overlay is dismissed */
+.hero-eyebrow,
+.hero-title,
+.hero-subtitle {
+  animation-play-state: paused;
+}
+.hero.hero-text-ready .hero-eyebrow,
+.hero.hero-text-ready .hero-title,
+.hero.hero-text-ready .hero-subtitle {
+  animation-play-state: running;
+}
+
 .hero-eyebrow {
   font-family: var(--font-body);
   font-size: 0.75rem;
@@ -2158,6 +2170,9 @@ function startPresentation() {
   overlay.classList.add('hidden');
   setTimeout(function() { overlay.style.display = 'none'; }, 600);
 
+  // Trigger hero text fade-in
+  document.getElementById('hero').classList.add('hero-text-ready');
+
   window.presentationMode = true;
   document.body.classList.add('presentation-active');
   lockScroll();
@@ -2186,6 +2201,9 @@ function viewSiteMode() {
   var overlay = document.getElementById('presentationOverlay');
   overlay.classList.add('hidden');
   setTimeout(function() { overlay.style.display = 'none'; }, 600);
+
+  // Trigger hero text fade-in
+  document.getElementById('hero').classList.add('hero-text-ready');
 }
 
 function advancePresentation(idx) {
@@ -2232,6 +2250,14 @@ function exitPresentation() {
 }
 
 function resetToOverlay() {
+  var hero = document.getElementById('hero');
+  hero.classList.remove('hero-text-ready');
+  // Reset hero text animations so they replay on next button click
+  hero.querySelectorAll('.hero-eyebrow, .hero-title, .hero-subtitle').forEach(function(el) {
+    el.style.animation = 'none';
+    el.offsetHeight; // force reflow
+    el.style.animation = '';
+  });
   window.scrollTo({ top: 0, behavior: 'smooth' });
   setTimeout(function() {
     var overlay = document.getElementById('presentationOverlay');
