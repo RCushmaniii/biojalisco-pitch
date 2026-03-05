@@ -854,12 +854,32 @@ body {
 /* Credibility Section */
 .credibility-section {
   background: var(--color-dark);
-  padding: 5rem 2rem;
+  padding: 4rem 2rem;
 }
 .credibility-inner {
   max-width: 900px;
   margin: 0 auto;
   text-align: center;
+}
+.credibility-headline {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  font-weight: 700;
+  color: var(--color-cream);
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+.credibility-headline em {
+  color: var(--color-gold);
+  font-style: normal;
+}
+.credibility-sub {
+  font-family: var(--font-body);
+  font-size: clamp(0.95rem, 1.2vw, 1.15rem);
+  color: var(--color-stone);
+  line-height: 1.7;
+  max-width: 650px;
+  margin: 0 auto 2.5rem;
 }
 
 /* Team Section */
@@ -1551,11 +1571,11 @@ body {
      ═══════════════════════════════════════ -->
 <section class="section credibility-section" id="credibility">
   <div class="credibility-inner">
-    <div class="proof-box-title" style="text-align:center; margin-bottom:1rem;">
-      <span class="lang-es" lang="es">Esto ya funciona en el mundo real</span>
-      <span class="lang-en" lang="en">This already works in the real world</span>
-    </div>
-    <p class="section-body" style="text-align:center; margin: 0 auto 2rem; max-width:600px;">
+    <h2 class="credibility-headline">
+      <span class="lang-es" lang="es">Esto <em>ya funciona</em> en el mundo real</span>
+      <span class="lang-en" lang="en">This <em>already works</em> in the real world</span>
+    </h2>
+    <p class="credibility-sub">
       <span class="lang-es" lang="es">iNaturalist comenzó como un proyecto universitario. Hoy tiene 200M+ observaciones, 3M+ usuarios y 400K+ especies. BioJalisco aplica ese modelo con liderazgo científico regional.</span>
       <span class="lang-en" lang="en">iNaturalist started as a university project. Today it has 200M+ observations, 3M+ users, and 400K+ species. BioJalisco applies that model with regional scientific leadership.</span>
     </p>
@@ -1569,7 +1589,7 @@ body {
     </div>
 
     <!-- Goals Box -->
-    <div class="proof-box reveal-scale">
+    <div class="proof-box">
       <div class="proof-box-title">
         <span class="lang-es" lang="es">Tres metas. Un cambio real.</span>
         <span class="lang-en" lang="en">Three goals. Real change.</span>
@@ -2092,29 +2112,33 @@ document.getElementById('lightboxOverlay').addEventListener('click', function() 
   this.classList.remove('active');
 });
 
-// ── Staggered Goal Reveal ──
-var goalObserver = new IntersectionObserver(function(entries) {
+// ── Staggered Goal Reveal (observe section, not individual items) ──
+var goalSectionObserver = new IntersectionObserver(function(entries) {
   entries.forEach(function(entry) {
     if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
+      document.querySelectorAll('.proof-goal').forEach(function(el) {
+        el.classList.add('visible');
+      });
+      goalSectionObserver.unobserve(entry.target);
     }
   });
-}, { threshold: 0.3 });
-document.querySelectorAll('.proof-goal').forEach(function(el) {
-  goalObserver.observe(el);
-});
+}, { threshold: 0.1 });
+var credSection = document.getElementById('credibility');
+if (credSection) goalSectionObserver.observe(credSection);
 
-// ── Staggered Timeline Reveal ──
-var timelineObserver = new IntersectionObserver(function(entries) {
+// ── Staggered Timeline Reveal (observe section to avoid transform conflicts) ──
+var timelineSectionObserver = new IntersectionObserver(function(entries) {
   entries.forEach(function(entry) {
     if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
+      document.querySelectorAll('.timeline-item').forEach(function(el) {
+        el.classList.add('visible');
+      });
+      timelineSectionObserver.unobserve(entry.target);
     }
   });
-}, { threshold: 0.2 });
-document.querySelectorAll('.timeline-item').forEach(function(el) {
-  timelineObserver.observe(el);
-});
+}, { threshold: 0.1 });
+var evidenceSection = document.querySelector('.evidence-section');
+if (evidenceSection) timelineSectionObserver.observe(evidenceSection);
 
 // ── Auto-scale roadmap to fill viewport ──
 function scaleRoadmap() {
