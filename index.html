@@ -1480,24 +1480,20 @@ let currentAudio = null;
 let audioElements = {};
 let audioLoaded = false;
 
-function getNarrationLang() {
-  var lang = document.body.getAttribute('data-lang') || 'en';
-  // Spanish missing 07-team and 08-ask — fall back to English for those
-  return lang;
-}
-
 function getAudioPath(file) {
-  var lang = getNarrationLang();
-  // Spanish is missing 07-team.mp3 and 08-ask.mp3
-  if (lang === 'es' && (file === '07-team.mp3' || file === '08-ask.mp3')) {
-    lang = 'en';
-  }
+  var lang = document.body.getAttribute('data-lang') || 'en';
   return 'assets/audio/' + lang + '/' + file;
 }
+
+let rainAudio = null;
 
 function preloadAudio() {
   if (audioLoaded) return;
   audioLoaded = true;
+  // Preload rain ambience
+  rainAudio = new Audio('assets/audio/rain_in_the_mountain.mp3');
+  rainAudio.preload = 'auto';
+  // Preload narration segments
   narrationSegments.forEach(function(seg) {
     var audio = new Audio();
     audio.preload = 'auto';
@@ -1553,6 +1549,29 @@ function fadeIn(audio, duration) {
   }, stepTime);
 }
 
+function playRainThenNarration(audio) {
+  if (!rainAudio) { fadeIn(audio, 500); return; }
+  // Reset rain to start
+  rainAudio.currentTime = 0;
+  rainAudio.volume = 0;
+  rainAudio.play().catch(function(){});
+  // Fade rain in over 600ms
+  var rSteps = 15;
+  var rStepTime = 600 / rSteps;
+  var rVol = 0;
+  var rIn = setInterval(function() {
+    rVol = Math.min(0.5, rVol + 0.5 / rSteps);
+    rainAudio.volume = rVol;
+    if (rVol >= 0.49) clearInterval(rIn);
+  }, rStepTime);
+  // After 4s of rain, fade rain out and start narration
+  setTimeout(function() {
+    fadeOut(rainAudio, 800, function() {});
+    if (audio.ended) audio.currentTime = 0;
+    fadeIn(audio, 500);
+  }, 4000);
+}
+
 function playSegment(idx) {
   if (idx === currentSegmentIdx) return;
   var newAudio = audioElements[narrationSegments[idx].id];
@@ -1562,12 +1581,14 @@ function playSegment(idx) {
     var old = currentAudio;
     fadeOut(old, 400, function() {});
   }
+  // Also stop rain if it's still playing from a previous transition
+  if (rainAudio && !rainAudio.paused) {
+    fadeOut(rainAudio, 300, function() {});
+  }
 
   currentSegmentIdx = idx;
   currentAudio = newAudio;
-  // Reset to start if it finished
-  if (newAudio.ended) newAudio.currentTime = 0;
-  fadeIn(newAudio, 500);
+  playRainThenNarration(newAudio);
 }
 
 function stopNarration() {
