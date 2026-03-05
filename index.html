@@ -1699,9 +1699,10 @@ window.addEventListener('scroll', () => {
   const progress = (scrollTop / docHeight) * 100;
   document.getElementById('progressBar').style.width = progress + '%';
 
-  // Update floating nav chevron — flip when near bottom
+  // Update floating nav chevron — flip when on last section
   const scrollNav = document.getElementById('scrollNav');
-  const nearBottom = scrollTop + window.innerHeight >= document.documentElement.scrollHeight - 100;
+  const askEl = document.getElementById('ask');
+  const nearBottom = (askEl && askEl.getBoundingClientRect().top < window.innerHeight * 0.5) || (scrollTop + window.innerHeight >= document.documentElement.scrollHeight - 100);
   const labelEs = scrollNav.querySelector('.lang-es');
   const labelEn = scrollNav.querySelector('.lang-en');
   if (nearBottom) {
@@ -1791,7 +1792,8 @@ const navSections = ['hero', 'problem', 'vision', 'species', 'evidence', 'credib
 
 document.getElementById('scrollNav').addEventListener('click', function() {
   const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-  const nearBottom = scrollTop + window.innerHeight >= document.documentElement.scrollHeight - 100;
+  const askEl = document.getElementById('ask');
+  const nearBottom = (askEl && askEl.getBoundingClientRect().top < window.innerHeight * 0.5) || (scrollTop + window.innerHeight >= document.documentElement.scrollHeight - 100);
 
   if (nearBottom) {
     // At bottom — scroll to top
