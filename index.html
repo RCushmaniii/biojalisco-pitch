@@ -1350,9 +1350,7 @@ body.presentation-active .lang-toggle,
 body.presentation-active .progress-bar {
   display: none;
 }
-body.presentation-active {
-  overflow: hidden;
-}
+/* Scroll lock is handled via JS event prevention to allow programmatic scrollIntoView */
 .pres-exit-btn {
   display: none;
   position: fixed;
@@ -2140,6 +2138,21 @@ function initAutoAdvance() {
 // ── Presentation Mode ──
 window.presentationMode = false;
 
+// Scroll lock: block user scroll during presentation, allow programmatic scroll
+function preventScroll(e) { e.preventDefault(); }
+var scrollLockKeys = {ArrowUp:1, ArrowDown:1, Space:1, PageUp:1, PageDown:1, Home:1, End:1};
+function preventScrollKeys(e) { if (scrollLockKeys[e.key]) e.preventDefault(); }
+function lockScroll() {
+  window.addEventListener('wheel', preventScroll, {passive: false});
+  window.addEventListener('touchmove', preventScroll, {passive: false});
+  window.addEventListener('keydown', preventScrollKeys, {passive: false});
+}
+function unlockScroll() {
+  window.removeEventListener('wheel', preventScroll);
+  window.removeEventListener('touchmove', preventScroll);
+  window.removeEventListener('keydown', preventScrollKeys);
+}
+
 function startPresentation() {
   var overlay = document.getElementById('presentationOverlay');
   overlay.classList.add('hidden');
@@ -2147,6 +2160,7 @@ function startPresentation() {
 
   window.presentationMode = true;
   document.body.classList.add('presentation-active');
+  lockScroll();
 
   // Enable narration and start playing hero
   narrationEnabled = true;
@@ -2189,6 +2203,7 @@ function advancePresentation(idx) {
 function endPresentation() {
   window.presentationMode = false;
   document.body.classList.remove('presentation-active');
+  unlockScroll();
   window._presentationJustEnded = true;
 
   // Pulse the CTA button
@@ -2205,6 +2220,7 @@ function endPresentation() {
 function exitPresentation() {
   window.presentationMode = false;
   document.body.classList.remove('presentation-active');
+  unlockScroll();
   stopNarration();
   narrationEnabled = false;
   document.getElementById('audioToggle').setAttribute('aria-pressed', 'false');
@@ -2259,6 +2275,7 @@ function toggleAudio() {
     if (window.presentationMode) {
       window.presentationMode = false;
       document.body.classList.remove('presentation-active');
+      unlockScroll();
     }
     stopNarration();
   }
