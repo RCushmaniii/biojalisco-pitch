@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiIgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIj4KICA8dGV4dCB4PSIxIiB5PSIyNSIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iOTAwIiBmb250LXNpemU9IjI2IiBsZXR0ZXItc3BhY2luZz0iLTIiPgogICAgPHRzcGFuIGZpbGw9IiMyZDUwMTYiPkI8L3RzcGFuPjx0c3BhbiBmaWxsPSIjNmIyMWE4Ij5KPC90c3Bhbj4KICA8L3RleHQ+Cjwvc3ZnPgo=">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiIgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIj4KICA8dGV4dCB4PSIxIiB5PSIyNSIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iOTAwIiBmb250LXNpemU9IjI2IiBsZXR0ZXItc3BhY2luZz0iLTIiPgogICAgPHRzcGFuIGZpbGw9IiMyMmM1NWUiPkI8L3RzcGFuPjx0c3BhbiBmaWxsPSIjYTg1NWY3Ij5KPC90c3Bhbj4KICA8L3RleHQ+Cjwvc3ZnPgo=">
 <title>BioJalisco — Biodiversidad de Occidente de México</title>
 <meta name="description" content="BioJalisco: plataforma de ciencia ciudadana para la biodiversidad del occidente de México. Citizen science platform for western Mexico biodiversity.">
 <meta property="og:title" content="BioJalisco — Biodiversidad de Occidente de México">
@@ -1690,6 +1690,7 @@ function setLang(lang) {
   document.getElementById('btnEs').classList.toggle('active', lang === 'es');
   document.getElementById('btnEn').classList.toggle('active', lang === 'en');
   document.documentElement.lang = lang;
+  document.title = lang === 'es' ? 'BioJalisco — Biodiversidad de Occidente de México' : 'BioJalisco — Citizen Biodiversity Network for Western Mexico';
 }
 
 // ── Auto-detect browser language (non-blocking) ──
