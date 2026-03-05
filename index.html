@@ -1549,23 +1549,36 @@ function fadeIn(audio, duration) {
   }, stepTime);
 }
 
+var rainTimeout = null;
+var rainFadeInterval = null;
+
+function cancelPendingRain() {
+  if (rainTimeout) { clearTimeout(rainTimeout); rainTimeout = null; }
+  if (rainFadeInterval) { clearInterval(rainFadeInterval); rainFadeInterval = null; }
+  if (rainAudio && !rainAudio.paused) {
+    rainAudio.pause();
+    rainAudio.volume = 0;
+    rainAudio.currentTime = 0;
+  }
+}
+
 function playRainThenNarration(audio) {
+  cancelPendingRain();
   if (!rainAudio) { fadeIn(audio, 500); return; }
   // Reset rain to start
   rainAudio.currentTime = 0;
   rainAudio.volume = 0;
   rainAudio.play().catch(function(){});
   // Fade rain in over 600ms
-  var rSteps = 15;
-  var rStepTime = 600 / rSteps;
   var rVol = 0;
-  var rIn = setInterval(function() {
-    rVol = Math.min(0.5, rVol + 0.5 / rSteps);
+  rainFadeInterval = setInterval(function() {
+    rVol = Math.min(0.5, rVol + 0.5 / 15);
     rainAudio.volume = rVol;
-    if (rVol >= 0.49) clearInterval(rIn);
-  }, rStepTime);
+    if (rVol >= 0.49) { clearInterval(rainFadeInterval); rainFadeInterval = null; }
+  }, 40);
   // After 4s of rain, fade rain out and start narration
-  setTimeout(function() {
+  rainTimeout = setTimeout(function() {
+    rainTimeout = null;
     fadeOut(rainAudio, 800, function() {});
     if (audio.ended) audio.currentTime = 0;
     fadeIn(audio, 500);
@@ -1577,14 +1590,14 @@ function playSegment(idx) {
   var newAudio = audioElements[narrationSegments[idx].id];
   if (!newAudio) return;
 
+  // Stop any currently playing narration
   if (currentAudio && !currentAudio.paused) {
-    var old = currentAudio;
-    fadeOut(old, 400, function() {});
+    currentAudio.pause();
+    currentAudio.volume = 1;
+    currentAudio.currentTime = 0;
   }
-  // Also stop rain if it's still playing from a previous transition
-  if (rainAudio && !rainAudio.paused) {
-    fadeOut(rainAudio, 300, function() {});
-  }
+  // Cancel any pending rain intro from previous segment
+  cancelPendingRain();
 
   currentSegmentIdx = idx;
   currentAudio = newAudio;
