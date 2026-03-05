@@ -588,7 +588,7 @@ body {
   border-radius: 16px;
   overflow: hidden;
   aspect-ratio: 3/4;
-  cursor: default;
+  cursor: zoom-in;
   transition: transform 0.4s ease;
 }
 
@@ -2481,6 +2481,17 @@ window.addEventListener('DOMContentLoaded', function() {
   if (lbEl) lbEl.addEventListener('click', function(e) {
     // Close on click of overlay background or the close button, not the image
     if (e.target !== lbEl.querySelector('img')) closeLightbox();
+  });
+
+  // Species cards: click to open image in lightbox
+  document.querySelectorAll('.species-card').forEach(function(card) {
+    card.addEventListener('click', function() {
+      var bg = card.querySelector('.species-card-bg');
+      if (!bg) return;
+      var style = bg.style.backgroundImage || getComputedStyle(bg).backgroundImage;
+      var match = style.match(/url\(["']?(.+?)["']?\)/);
+      if (match && match[1]) openLightbox(match[1]);
+    });
   });
 });
 
