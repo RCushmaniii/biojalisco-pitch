@@ -5,10 +5,10 @@
 portfolio_enabled: true
 portfolio_priority: 4
 portfolio_featured: true
-portfolio_last_reviewed: "2026-03-05"
+portfolio_last_reviewed: "2026-03-06"
 
-title: "BioJalisco — Biodiversity Atlas Pitch Site"
-tagline: "Cinematic scrollytelling site pitching a citizen-science biodiversity platform for western Mexico"
+title: "BioJalisco — Biodiversity Atlas Pitch Site + Species Identifier"
+tagline: "Cinematic scrollytelling pitch site with AI-powered species identification for western Mexico's biodiversity platform"
 slug: "biojalisco-pitch"
 
 category: "Client Work"
@@ -22,6 +22,10 @@ tags:
   - "jalisco"
   - "mexico"
   - "landing-page"
+  - "ai-vision"
+  - "species-identification"
+  - "openai"
+  - "serverless"
 
 thumbnail: "assets/images/portfolio/scrollytelling_pitch_thumb.png"
 hero_images:
@@ -54,16 +58,21 @@ key_outcomes:
   - "Cinematic 5-act narrative arc designed for stakeholder persuasion"
   - "Full auto-play presentation mode with segmented MP3 narration, rain-intro crossfades, and auto-scroll"
   - "Mobile-first species carousel with scroll-snap, dot indicators, and audio-synced auto-cycle"
+  - "AI Species Identifier with GPT-4o vision — confidence %, full taxonomy, ecology, geography, conservation status, similar species"
+  - "Tabbed results UI with scan history persisted in localStorage"
+  - "Vercel serverless Python function for production API"
   - "Deployed on Vercel with zero build step"
 
 tech_stack:
   - "HTML5"
   - "CSS3 (custom properties, grid, flexbox, scroll-snap)"
   - "Vanilla JavaScript"
+  - "Python (Flask + Vercel serverless)"
+  - "OpenAI GPT-4o Vision API"
   - "Intersection Observer API"
   - "Web Audio API (procedural ambient + MP3 narration)"
   - "Google Fonts"
-  - "Vercel"
+  - "Vercel (static + serverless)"
   - "Base64 image embedding"
 
 complexity: "Production"
@@ -105,6 +114,9 @@ The ambient forest soundscape is generated in real-time using Web Audio API — 
 - **Web Audio API synthesis:** Three-layer procedural soundscape (filtered noise for wind, frequency-modulated oscillators for bird chirps, sine drone for depth) with fade-in/fade-out on toggle
 - **CSS-only parallax:** `background-attachment: fixed` on the vision section creates depth without JavaScript scroll listeners
 - **Animated counters:** Eased counter animations triggered by IntersectionObserver with cubic easing for natural deceleration
+- **AI Species Identification:** GPT-4o vision API with structured JSON output — confidence percentage, full taxonomy (Kingdom→Species), ecology (habitat, diet, size, lifespan, behavior), geographic range with Jalisco/Mexico/invasive badges, IUCN conservation status, and similar species comparison. Handles wildlife, insects, plants, and domestic animals (breed identification with temperament and origin history).
+- **Tabbed results UI:** Six-tab interface (Overview, Taxonomy, Ecology, Range, Conservation, Similar) with circular confidence gauge, taxonomy tree visualization, and scan history persisted in localStorage
+- **Serverless architecture:** Same Python codebase runs as Flask dev server locally and as a Vercel serverless function in production
 
 ## Results
 
@@ -113,9 +125,11 @@ The ambient forest soundscape is generated in real-time using Web Audio API — 
 - Complete narrative pitch accessible in both Spanish and English
 - Credibility elements (PhD photo, book trilogy, fieldwork photography) embedded directly
 - Single URL to share — no login, no app install, works on any device
+- Interactive Species Identifier demonstrates real AI capability — stakeholders can try it immediately
 
 **Technical Demonstration:**
 
 - Proves that a high-impact persuasion site doesn't need React, a build system, or a CMS
 - Shows restraint in technology choices — vanilla JS for a project that genuinely doesn't need frameworks
+- AI integration via serverless functions keeps the architecture simple while delivering real utility
 - Image optimization pipeline that could be reused across CushLabs projects

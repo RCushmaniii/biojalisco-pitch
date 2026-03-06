@@ -3,37 +3,49 @@
 ## Project Overview
 Bilingual (ES/EN) scrollytelling single-file HTML site presenting the BioJalisco citizen-science biodiversity platform vision for western Mexico. This is a persuasion/pitch site, not the platform itself. All images are embedded as base64 data URIs for a fully self-contained deployment.
 
+Includes a **Species Identifier** tool — an AI-powered species/breed identification feature using GPT-4o vision, deployed as a Vercel serverless function with a secret link from the pitch site footer.
+
 ## Tech Stack
-- Single-file HTML/CSS/JS (no build step, no dependencies)
+- Single-file HTML/CSS/JS (no build step, no dependencies) for the pitch site
 - Google Fonts (Playfair Display, Source Sans 3, Cormorant Garamond)
 - Intersection Observer API for scroll-triggered reveal animations
 - Web Audio API for ambient forest soundscape
-- Vercel for static hosting
+- **Species Identifier**: Python (Flask local dev) + Vercel serverless function + OpenAI GPT-4o vision API
+- Vercel for static hosting + serverless functions
 
 ## Project Structure
 ```
 atlas-biodiversidad-pitch/
-├── index.html          ← The entire site (single file, ~1.8MB with embedded images)
+├── index.html              ← The pitch site (single file, ~1.8MB with embedded images)
+├── api/
+│   └── identify.py         ← Vercel serverless function (species ID via GPT-4o)
+├── species-id/
+│   ├── app.py              ← Flask local dev server (species ID)
+│   └── static/
+│       └── index.html      ← Species Identifier frontend (tabbed results UI)
 ├── assets/
-│   └── images/         ← Source WebP images (originals, not used at runtime)
-├── docs/
-│   └── PORTFOLIO.MD    ← CushLabs portfolio entry (when ready)
+│   └── images/             ← Source WebP images (originals, not used at runtime)
+├── docs/                   ← Project documentation, changelogs, competitive analysis
+├── requirements.txt        ← Python deps for Vercel serverless (openai, httpx)
+├── vercel.json             ← Vercel routing: static site + serverless API + species-id page
 ├── README.md
 ├── LICENSE
 ├── CLAUDE.md
-├── portfolio.md
-└── vercel.json         ← Vercel static site config
+└── portfolio.md
 ```
 
 ## Development Commands
 ```powershell
-# No build step — open directly in browser
+# Pitch site — open directly in browser (no build step)
 start index.html
 
-# Or serve locally with any static server
+# Species Identifier — local Flask dev server on port 5050
+python species-id/app.py
+
+# Or serve pitch site with any static server
 npx serve .
 
-# Deploy to Vercel
+# Deploy everything to Vercel
 vercel --prod
 ```
 
@@ -43,9 +55,17 @@ vercel --prod
 - **Images**: All embedded as base64 data URIs in inline CSS `background-image` or `<img src>` attributes
 - **Audio**: Web Audio API generates procedural forest ambience (wind noise, bird chirps, drone) — no audio files
 - **5-act narrative**: Hero → Problem → Vision → Evidence → Ask
+- **Species Identifier**: Camera/upload → GPT-4o vision → structured JSON (confidence %, taxonomy, ecology, geography, conservation, similar species) → tabbed UI with scan history in localStorage
+- **Secret footer link**: Leaf icon (20% opacity, 50% hover) in pitch site footer links to `/species-id`
+
+## Vercel Routing
+- `/` → `index.html` (pitch site)
+- `/species-id` → `species-id/static/index.html` (Species Identifier UI)
+- `/api/identify` → `api/identify.py` (serverless GPT-4o vision endpoint)
+- `/assets/*`, `/docs/*` → static file passthrough
 
 ## Current Focus
-Site is deployed and functional. May need iteration on copy, image swaps, or additional sections based on stakeholder feedback.
+Both the pitch site and Species Identifier are deployed and functional. Species Identifier may evolve with additional data sources or features based on feedback.
 
 ## Known Issues
 - Large single-file size (~1.8MB) due to embedded base64 images — acceptable for this use case
@@ -53,4 +73,7 @@ Site is deployed and functional. May need iteration on copy, image swaps, or add
 - Ambient audio requires user interaction to start (browser autoplay policy)
 
 ## Environment Setup
-No environment variables needed. Static site with no backend.
+- **Pitch site**: No environment variables needed
+- **Species Identifier**: Requires `OPENAI_API_KEY` environment variable
+  - Local: set in `.env` file or shell environment
+  - Production: set in Vercel dashboard (Settings → Environment Variables)
