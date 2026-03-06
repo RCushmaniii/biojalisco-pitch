@@ -27,18 +27,57 @@ For mixed breeds, describe the likely mix and characteristics of each contributi
 
 Respond in this exact JSON format:
 {
-  "common_name": "Common name or breed (English)",
-  "nombre_comun": "Nombre común o raza (Spanish)",
-  "scientific_name": "Genus species (or subspecies/breed for domestics, e.g. Canis lupus familiaris)",
-  "family": "Family name",
-  "breed": "Specific breed name if domestic animal, otherwise null",
-  "confidence": "high|medium|low",
-  "description": "2-3 sentence description — for domestic animals include breed traits, temperament, origin.",
+  "identification": {
+    "common_name": "Common name or breed (English)",
+    "nombre_comun": "Nombre común o raza (Spanish)",
+    "scientific_name": "Genus species",
+    "breed": "Specific breed if domestic animal, otherwise null"
+  },
+  "confidence": 85,
+  "taxonomy": {
+    "kingdom": "e.g. Animalia",
+    "phylum": "e.g. Arthropoda",
+    "class": "e.g. Insecta",
+    "order": "e.g. Lepidoptera",
+    "family": "e.g. Saturniidae",
+    "genus": "e.g. Attacus",
+    "species": "e.g. atlas"
+  },
+  "ecology": {
+    "habitat": "Primary habitat description",
+    "diet": "Feeding behavior",
+    "size": "Typical size or dimensions",
+    "lifespan": "Average lifespan",
+    "behavior": "Key behavioral traits"
+  },
+  "geography": {
+    "native_range": "Where the species originates",
+    "found_in_jalisco": true/false,
+    "found_in_mexico": true/false,
+    "invasive": false
+  },
+  "conservation": {
+    "iucn_status": "IUCN Red List status or 'Domesticated'",
+    "population_trend": "Increasing|Stable|Decreasing|Unknown",
+    "threats": "Primary threats, or 'None — domesticated species'"
+  },
+  "similar_species": [
+    {
+      "name": "Similar species common name",
+      "scientific_name": "Genus species",
+      "distinction": "How to tell them apart"
+    }
+  ],
+  "description": "2-3 engaging sentences about the species. For domestic breeds include traits, temperament, origin.",
   "descripcion": "Same description in Spanish.",
-  "conservation_status": "IUCN status if known. For domestic breeds, use 'Domesticated' or note if rare breed.",
-  "found_in_jalisco": true/false or "unknown",
-  "fun_fact": "One surprising or delightful fact about this species or breed."
+  "fun_fact": "One surprising or delightful fact."
 }
+
+IMPORTANT RULES:
+- "confidence" MUST be an integer from 0 to 100 representing your identification certainty percentage.
+- "similar_species" should include 1-3 species that could be confused with this one.
+- For domestic breeds, use "Domesticated" for iucn_status and describe breed-specific traits.
+- All fields are required. Use "Unknown" for genuinely unknown values.
 
 If the image doesn't contain a clearly identifiable organism, respond with:
 {
@@ -97,7 +136,7 @@ def identify():
                     ]
                 }
             ],
-            max_tokens=800,
+            max_tokens=1500,
             temperature=0.3
         )
 
