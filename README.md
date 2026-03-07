@@ -49,8 +49,8 @@ All content exists in both languages in the DOM. A `data-lang` attribute on the 
 
 ## Live Demo
 
-**Pitch Site:** [atlas-biodiversidad-pitch.vercel.app](https://atlas-biodiversidad-pitch.vercel.app)
-**Species Identifier:** [atlas-biodiversidad-pitch.vercel.app/species-id](https://atlas-biodiversidad-pitch.vercel.app/species-id)
+**Pitch Site:** [biojalisco-pitch.vercel.app](https://biojalisco-pitch.vercel.app)
+**Species Identifier:** [biojalisco-pitch.vercel.app/species-id](https://biojalisco-pitch.vercel.app/species-id)
 
 Try these interactions:
 - Toggle the **ES/EN** language switch (top right) — all content swaps instantly
@@ -62,7 +62,7 @@ Try these interactions:
 ## Project Structure
 
 ```
-atlas-biodiversidad-pitch/
+biojalisco-pitch/
 ├── index.html              # The pitch site (single file, ~1.8MB with embedded images)
 ├── api/
 │   └── identify.py         # Vercel serverless function (species ID via GPT-4o)
@@ -92,8 +92,8 @@ atlas-biodiversidad-pitch/
 ### Installation
 
 ```powershell
-git clone https://github.com/RCushmaniii/atlas-biodiversidad-pitch.git
-cd atlas-biodiversidad-pitch
+git clone https://github.com/RCushmaniii/biojalisco-pitch.git
+cd biojalisco-pitch
 ```
 
 **Pitch site** — Open `index.html` directly in a browser, or serve it:

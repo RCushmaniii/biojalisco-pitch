@@ -42,8 +42,8 @@ hero_images:
 demo_video_url: "assets/video/scrollytelling-pitch.mp4"
 demo_video_poster: "assets/images/portfolio/scrollytelling-pitch-poster.jpg"
 
-live_url: "https://atlas-biodiversidad-pitch.vercel.app"
-demo_url: "https://atlas-biodiversidad-pitch.vercel.app"
+live_url: "https://biojalisco-pitch.vercel.app"
+demo_url: "https://biojalisco-pitch.vercel.app"
 case_study_url: ""
 
 problem_solved: |

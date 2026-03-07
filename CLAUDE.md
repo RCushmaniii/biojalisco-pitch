@@ -15,7 +15,7 @@ Includes a **Species Identifier** tool — an AI-powered species/breed identific
 
 ## Project Structure
 ```
-atlas-biodiversidad-pitch/
+biojalisco-pitch/
 ├── index.html              ← The pitch site (single file, ~1.8MB with embedded images)
 ├── api/
 │   └── identify.py         ← Vercel serverless function (species ID via GPT-4o)
