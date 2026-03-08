@@ -1,5 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
-  <text x="1" y="25" font-family="Arial Black, Arial, Helvetica, sans-serif" font-weight="900" font-size="26" letter-spacing="-2">
-    <tspan fill="#22c55e">B</tspan><tspan fill="#a855f7">J</tspan>
-  </text>
+  <rect width="32" height="32" rx="6" fill="#2d4a2d"/>
+  <g transform="translate(16,18)" fill="#c8a45c">
+    <!-- Base shape behind leaves -->
+    <path d="M-10,6 Q-8,-1 0,-3.5 Q8,-1 10,6 Z" opacity="0.8"/>
+    <!-- Center spike -->
+    <path d="M-1,-13 L0,-14 L1,-13 L0.8,-3 L-0.8,-3 Z"/>
+    <!-- Inner spikes -->
+    <path d="M-3,-11 L-1.8,-10.5 L-0.8,-3 L-2.8,-2 Z"/>
+    <path d="M3,-11 L1.8,-10.5 L0.8,-3 L2.8,-2 Z"/>
+    <!-- Mid spikes -->
+    <path d="M-5.5,-8 L-4,-7.5 L-2.5,-1.5 L-4.5,-0.5 Z"/>
+    <path d="M5.5,-8 L4,-7.5 L2.5,-1.5 L4.5,-0.5 Z"/>
+    <!-- Outer leaves -->
+    <path d="M-7.5,-5 L-6,-4.5 L-4,0 L-6.5,1 Z"/>
+    <path d="M7.5,-5 L6,-4.5 L4,0 L6.5,1 Z"/>
+    <!-- Wide outer leaves -->
+    <path d="M-9,-1.5 L-7.5,-1 L-5.5,1.5 L-8,3 Z"/>
+    <path d="M9,-1.5 L7.5,-1 L5.5,1.5 L8,3 Z"/>
+    <!-- Lowest spreading leaves -->
+    <path d="M-10.5,1.5 L-8.5,1.5 L-7,3.5 L-9.5,5 Z"/>
+    <path d="M10.5,1.5 L8.5,1.5 L7,3.5 L9.5,5 Z"/>
+  </g>
 </svg>
