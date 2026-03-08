@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="pres-no-scrollbar">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1553,12 +1553,12 @@ body.presentation-active .lang-toggle,
 body.presentation-active .progress-bar {
   display: none;
 }
-/* Hide scrollbar during presentation mode */
+/* Hide scrollbar during overlay and presentation mode */
 html.pres-no-scrollbar,
 html.pres-no-scrollbar body {
   scrollbar-width: none;
   -ms-overflow-style: none;
-  overflow-y: scroll; /* keep scroll ability, just hide the bar */
+  overflow-y: scroll;
 }
 html.pres-no-scrollbar::-webkit-scrollbar,
 html.pres-no-scrollbar body::-webkit-scrollbar {
@@ -2534,6 +2534,9 @@ function viewSiteMode() {
   var overlay = document.getElementById('presentationOverlay');
   overlay.classList.add('hidden');
   setTimeout(function() { overlay.style.display = 'none'; }, 600);
+
+  // Show scrollbar for free browsing
+  document.documentElement.classList.remove('pres-no-scrollbar');
 
   // Trigger hero text fade-in
   document.getElementById('hero').classList.add('hero-text-ready');
