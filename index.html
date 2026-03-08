@@ -1558,10 +1558,13 @@ html.pres-no-scrollbar,
 html.pres-no-scrollbar body {
   scrollbar-width: none;
   -ms-overflow-style: none;
+  overflow-y: scroll; /* keep scroll ability, just hide the bar */
 }
 html.pres-no-scrollbar::-webkit-scrollbar,
 html.pres-no-scrollbar body::-webkit-scrollbar {
   display: none;
+  width: 0;
+  height: 0;
 }
 .pres-exit-btn {
   display: none;
