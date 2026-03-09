@@ -19,3 +19,6 @@ Desktop.ini
 *.bak
 *.b64
 _embed_images.py
+
+.vercel
+.env*.local

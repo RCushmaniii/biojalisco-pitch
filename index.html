@@ -1548,7 +1548,6 @@ body {
   animation: ctaPulse 0.8s ease-in-out 3;
 }
 body.presentation-active .scroll-nav,
-body.presentation-active .audio-toggle,
 body.presentation-active .lang-toggle,
 body.presentation-active .progress-bar {
   display: none;
@@ -2283,6 +2282,11 @@ let currentSegmentIdx = -1;
 let currentAudio = null;
 let audioElements = {};
 let audioLoaded = false;
+let playGeneration = 0; // Generation counter to prevent orphaned audio
+let activeFadeIntervals = []; // Track fade intervals for cleanup
+let presentationPaused = false;
+let pausedByVisibility = false;
+let pendingAdvanceTimer = null; // Track the post-narration advance timer
 
 function getAudioPath(file) {
   var lang = document.body.getAttribute('data-lang') || 'en';
@@ -2325,15 +2329,23 @@ function fadeOut(audio, duration, callback) {
   var stepTime = duration / steps;
   var stepVol = startVol / steps;
   var interval = setInterval(function() {
+    if (!audio || audio.paused) {
+      clearInterval(interval);
+      activeFadeIntervals = activeFadeIntervals.filter(function(id) { return id !== interval; });
+      if (callback) callback();
+      return;
+    }
     audio.volume = Math.max(0, audio.volume - stepVol);
     if (audio.volume <= 0.01) {
       clearInterval(interval);
+      activeFadeIntervals = activeFadeIntervals.filter(function(id) { return id !== interval; });
       audio.pause();
       audio.volume = 1;
       audio.currentTime = 0;
       if (callback) callback();
     }
   }, stepTime);
+  activeFadeIntervals.push(interval);
 }
 
 function fadeIn(audio, duration) {
@@ -2345,12 +2357,19 @@ function fadeIn(audio, duration) {
   var stepTime = duration / steps;
   var stepVol = targetVol / steps;
   var interval = setInterval(function() {
+    if (!audio || audio.paused) {
+      clearInterval(interval);
+      activeFadeIntervals = activeFadeIntervals.filter(function(id) { return id !== interval; });
+      return;
+    }
     audio.volume = Math.min(targetVol, audio.volume + stepVol);
     if (audio.volume >= targetVol - 0.01) {
       clearInterval(interval);
+      activeFadeIntervals = activeFadeIntervals.filter(function(id) { return id !== interval; });
       audio.volume = targetVol;
     }
   }, stepTime);
+  activeFadeIntervals.push(interval);
 }
 
 var rainTimeout = null;
@@ -2390,9 +2409,12 @@ function playRainThenNarration(audio) {
 }
 
 function playSegment(idx) {
-  if (idx === currentSegmentIdx) return;
+  if (idx === currentSegmentIdx && currentAudio && !currentAudio.paused) return;
   var newAudio = audioElements[narrationSegments[idx].id];
   if (!newAudio) return;
+
+  // Increment generation to invalidate any in-flight operations
+  var gen = ++playGeneration;
 
   // Stop any currently playing narration
   if (currentAudio && !currentAudio.paused) {
@@ -2402,6 +2424,9 @@ function playSegment(idx) {
   }
   // Cancel any pending rain intro from previous segment
   cancelPendingRain();
+
+  // Check if superseded
+  if (gen !== playGeneration) return;
 
   currentSegmentIdx = idx;
   currentAudio = newAudio;
@@ -2421,11 +2446,22 @@ function playSegment(idx) {
 }
 
 function stopNarration() {
+  // Kill all in-flight fades
+  activeFadeIntervals.forEach(clearInterval);
+  activeFadeIntervals = [];
+  // Increment generation to invalidate in-flight playSegment calls
+  playGeneration++;
+  // Clear pending advance timer
+  if (pendingAdvanceTimer) { clearTimeout(pendingAdvanceTimer); pendingAdvanceTimer = null; }
+
   if (currentAudio && !currentAudio.paused) {
-    fadeOut(currentAudio, 300);
+    currentAudio.pause();
+    currentAudio.volume = 1;
+    currentAudio.currentTime = 0;
   }
   currentSegmentIdx = -1;
   currentAudio = null;
+  cancelPendingRain();
   if (window._speciesCarouselStop) window._speciesCarouselStop();
 }
 
@@ -2460,22 +2496,33 @@ function initAutoAdvance() {
     if (!audio) return;
     audio.addEventListener('ended', function() {
       if (!narrationEnabled) return;
-      currentSegmentIdx = -1;
-      currentAudio = null;
+      // Only clear if this is still the active audio
+      if (currentAudio === audio) {
+        currentSegmentIdx = -1;
+        currentAudio = null;
+      }
       // In presentation mode, auto-advance to next section after pause
-      if (window.presentationMode) {
-        var nextIdx = idx + 1;
-        if (nextIdx < narrationSegments.length) {
-          setTimeout(function() {
-            if (window.presentationMode) advancePresentation(nextIdx);
-          }, 1500);
-        } else {
-          // Last section finished — end presentation
-          setTimeout(function() { endPresentation(); }, 1500);
-        }
+      // But NOT if presentation is paused — wait for resume
+      if (window.presentationMode && !presentationPaused) {
+        scheduleAdvance(idx);
       }
     });
   });
+}
+
+function scheduleAdvance(idx) {
+  if (pendingAdvanceTimer) { clearTimeout(pendingAdvanceTimer); pendingAdvanceTimer = null; }
+  var nextIdx = idx + 1;
+  pendingAdvanceTimer = setTimeout(function() {
+    pendingAdvanceTimer = null;
+    if (!window.presentationMode) return;
+    if (presentationPaused) return; // Re-check in case paused during the delay
+    if (nextIdx < narrationSegments.length) {
+      advancePresentation(nextIdx);
+    } else {
+      endPresentation();
+    }
+  }, 1500);
 }
 
 // ── Presentation Mode ──
@@ -2507,8 +2554,11 @@ function startPresentation() {
   document.getElementById('hero').classList.add('hero-text-ready');
 
   window.presentationMode = true;
+  presentationPaused = false;
+  pausedByVisibility = false;
   document.body.classList.add('presentation-active');
   lockScroll();
+  setupVisibilityHandler();
 
   // Enable narration and start playing hero
   narrationEnabled = true;
@@ -2556,6 +2606,8 @@ function advancePresentation(idx) {
 
 function endPresentation() {
   window.presentationMode = false;
+  presentationPaused = false;
+  teardownVisibilityHandler();
   document.body.classList.remove('presentation-active');
   unlockScroll();
   window._presentationJustEnded = true;
@@ -2573,6 +2625,8 @@ function endPresentation() {
 
 function exitPresentation() {
   window.presentationMode = false;
+  presentationPaused = false;
+  teardownVisibilityHandler();
   document.body.classList.remove('presentation-active');
   unlockScroll();
   stopNarration();
@@ -2602,11 +2656,79 @@ function resetToOverlay() {
   }, 600);
 }
 
+// ── Visibility Handler — auto-pause when tab hidden ──
+var _visibilityHandler = null;
+
+function setupVisibilityHandler() {
+  if (_visibilityHandler) return;
+  _visibilityHandler = function() {
+    if (!window.presentationMode) return;
+    if (document.hidden) {
+      // Tab lost focus — auto-pause if not already paused
+      if (!presentationPaused) {
+        pausedByVisibility = true;
+        presentationPaused = true;
+        if (currentAudio && !currentAudio.paused) {
+          currentAudio.pause();
+        }
+        // Clear any pending advance timer
+        if (pendingAdvanceTimer) { clearTimeout(pendingAdvanceTimer); pendingAdvanceTimer = null; }
+      }
+    } else {
+      // Tab regained focus — auto-resume only if we auto-paused
+      if (pausedByVisibility && presentationPaused) {
+        pausedByVisibility = false;
+        presentationPaused = false;
+        if (currentAudio && currentAudio.paused && currentAudio.currentTime > 0) {
+          currentAudio.play().catch(function(){});
+        }
+      }
+    }
+  };
+  document.addEventListener('visibilitychange', _visibilityHandler);
+}
+
+function teardownVisibilityHandler() {
+  if (_visibilityHandler) {
+    document.removeEventListener('visibilitychange', _visibilityHandler);
+    _visibilityHandler = null;
+  }
+  pausedByVisibility = false;
+}
+
+// ── Atomic pause/play toggle for presentation mode ──
+function togglePresentationPlayback() {
+  // Manual toggle always clears visibility flag
+  pausedByVisibility = false;
+
+  if (presentationPaused) {
+    // Resume
+    presentationPaused = false;
+    if (currentAudio && currentAudio.paused && currentAudio.currentTime > 0) {
+      currentAudio.play().catch(function(){});
+    }
+  } else {
+    // Pause
+    presentationPaused = true;
+    if (currentAudio && !currentAudio.paused) {
+      currentAudio.pause();
+    }
+    // Clear any pending advance timer
+    if (pendingAdvanceTimer) { clearTimeout(pendingAdvanceTimer); pendingAdvanceTimer = null; }
+  }
+}
+
 // Toggle button
 const mute1 = document.getElementById('audioMute1');
 const mute2 = document.getElementById('audioMute2');
 
 function toggleAudio() {
+  if (window.presentationMode) {
+    // In presentation mode, pause/play button toggles presentation pause
+    togglePresentationPlayback();
+    return;
+  }
+
   narrationEnabled = !narrationEnabled;
   document.getElementById('audioToggle').setAttribute('aria-pressed', narrationEnabled);
 
