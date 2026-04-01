@@ -3,8 +3,8 @@
 # PORTFOLIO.md — BioJalisco Pitch Site
 # =============================================================================
 portfolio_enabled: true
-portfolio_priority: 4
-portfolio_featured: true
+portfolio_priority: 12
+portfolio_featured: false
 portfolio_last_reviewed: "2026-03-06"
 
 title: "BioJalisco — Biodiversity Atlas Pitch Site + Species Identifier"
