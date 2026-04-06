@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate HTML files exist
+        run: |
+          count=$(find . -name "*.html" | wc -l)
+          echo "Found $count HTML files"
+          if [ "$count" -eq 0 ]; then
+            echo "ERROR: No HTML files found"
+            exit 1
+          fi
