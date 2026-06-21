@@ -27,16 +27,36 @@ tags:
 
 thumbnail: "/assets/images/portfolio/scrollytelling_pitch_thumb.png"
 hero_images:
-  - "/assets/images/portfolio/scrollytelling_pitch_01.png"
-  - "/assets/images/portfolio/scrollytelling_pitch_02.png"
-  - "/assets/images/portfolio/scrollytelling_pitch_03.png"
-  - "/assets/images/portfolio/scrollytelling_pitch_04.png"
-  - "/assets/images/portfolio/scrollytelling_pitch_05.png"
-  - "/assets/images/portfolio/scrollytelling_pitch_06.png"
-  - "/assets/images/portfolio/scrollytelling_pitch_07.png"
-  - "/assets/images/portfolio/scrollytelling_pitch_08.png"
-  - "/assets/images/portfolio/scrollytelling_pitch_09.png"
-  - "/assets/images/portfolio/scrollytelling_pitch_10.png"
+  - src: "/assets/images/portfolio/scrollytelling_pitch_01.png"
+    alt_en: "Cinematic hero section of the BioJalisco scrollytelling pitch opening the biodiversity story"
+    alt_es: "Sección principal cinematográfica del sitio scrollytelling de BioJalisco que abre la historia de la biodiversidad"
+  - src: "/assets/images/portfolio/scrollytelling_pitch_02.png"
+    alt_en: "Problem section showing the data-coverage crisis across Jalisco's territory with animated counters"
+    alt_es: "Sección del problema que muestra la crisis de cobertura de datos en el territorio de Jalisco con contadores animados"
+  - src: "/assets/images/portfolio/scrollytelling_pitch_03.png"
+    alt_en: "Vision section introducing the BioJalisco citizen-science biodiversity platform"
+    alt_es: "Sección de la visión que presenta la plataforma de biodiversidad de ciencia ciudadana BioJalisco"
+  - src: "/assets/images/portfolio/scrollytelling_pitch_04.png"
+    alt_en: "Evidence section with project roadmap and conservation proof points"
+    alt_es: "Sección de evidencia con la hoja de ruta del proyecto y puntos de prueba de conservación"
+  - src: "/assets/images/portfolio/scrollytelling_pitch_05.png"
+    alt_en: "Team and credibility section featuring researcher credentials and the book trilogy"
+    alt_es: "Sección de equipo y credibilidad que destaca las credenciales de los investigadores y la trilogía de libros"
+  - src: "/assets/images/portfolio/scrollytelling_pitch_06.png"
+    alt_en: "Parallax wildlife photography of western Mexico's biodiversity"
+    alt_es: "Fotografía de fauna con efecto parallax de la biodiversidad del occidente de México"
+  - src: "/assets/images/portfolio/scrollytelling_pitch_07.png"
+    alt_en: "AI Species Identifier interface ready to analyze an uploaded wildlife photo"
+    alt_es: "Interfaz del Identificador de Especies con IA lista para analizar una foto de fauna cargada"
+  - src: "/assets/images/portfolio/scrollytelling_pitch_08.png"
+    alt_en: "Species identification results with confidence gauge and full taxonomy tree"
+    alt_es: "Resultados de identificación de especies con indicador de confianza y árbol taxonómico completo"
+  - src: "/assets/images/portfolio/scrollytelling_pitch_09.png"
+    alt_en: "Ecology and conservation status tabs detailing habitat, range, and IUCN status"
+    alt_es: "Pestañas de ecología y estado de conservación que detallan el hábitat, el rango de distribución y el estado de la UICN"
+  - src: "/assets/images/portfolio/scrollytelling_pitch_10.png"
+    alt_en: "Closing call-to-action section inviting partners and funders to support BioJalisco"
+    alt_es: "Sección de llamada a la acción final que invita a socios y patrocinadores a apoyar a BioJalisco"
 demo_video_url: "/assets/video/scrollytelling-pitch.mp4"
 demo_video_poster: "/assets/images/portfolio/scrollytelling-pitch-poster.jpg"
 
@@ -50,6 +70,17 @@ problem_solved: |
   territory. BioJalisco proposes closing that gap through citizen science and technology,
   but the vision needed a compelling presentation to win stakeholders and partners.
 
+solution: |
+  A single self-contained HTML file delivers a cinematic 5-act narrative arc (Hook,
+  Problem, Vision, Evidence, Ask) with scroll-triggered animations, animated counters,
+  and a procedural forest soundscape generated in real time via the Web Audio API. A
+  data-lang attribute toggles ES/EN content instantly with no page reload, so Mexican
+  academics and international partners share one seamless bilingual experience. All nine
+  images are converted to WebP and embedded as base64 data URIs, making the 1.8MB site
+  fully portable with no build step and no external dependencies beyond Google Fonts. A
+  GPT-4o vision-powered species identifier lets stakeholders try the platform's core AI
+  capability immediately.
+
 key_outcomes:
   - "Self-contained single-file HTML site with 9 embedded images (~1.8MB total)"
   - "Bilingual ES/EN with instant language switching"
@@ -60,6 +91,12 @@ key_outcomes:
   - "Tabbed results UI with scan history persisted in localStorage"
   - "Vercel serverless Python function for production API"
   - "Deployed on Vercel with zero build step"
+
+metrics:
+  - "Complete narrative pitch accessible in both Spanish and English from a single shareable URL"
+  - "Interactive Species Identifier lets stakeholders try real GPT-4o vision AI immediately"
+  - "High-impact persuasion site shipped with no React, build system, or CMS"
+  - "Image pipeline cut total payload from 16.8MB to 1.3MB (92% reduction)"
 
 tech_stack:
   - "HTML5"
@@ -89,19 +126,6 @@ health_status:
   analytics: "DEFERRED"
   structured_logging: "-"
   dependabot: "-"
-  secret_scanning: "Y"
-  db_backup: "-"
-health_status:
-  sentry: "-"
-  testing: "-"
-  ci_cd: "Y"
-  health_endpoint: "n/a"
-  security_headers: "-"
-  rate_limiting: "n/a"
-  env_validation: "n/a"
-  analytics: "DEFERRED"
-  structured_logging: "-"
-  dependabot: "Y"
   secret_scanning: "Y"
   db_backup: "-"
 ---
