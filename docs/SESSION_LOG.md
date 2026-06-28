@@ -18,6 +18,8 @@ Entries are newest-first. Each entry documents one Claude Code working session.
 - Made ES title single-source: new `src/data/esCanonicalTitles.ts` exports `ES_TITLE_BIOJALISCO_PITCH`, referenced by all 3 ES surfaces (card, detail headline, SEO title) so they can't drift (cushlabs PR #133)
 - Caught + fixed a 4th drift point via live verification: EN detail SEO `<title>` still rendered "BioJalisco — Biodiversity Atlas" (stale `metaTitles` override in `projects/[slug].astro` missed first pass — only EN descriptions were checked, not EN titles). Removed it so EN SEO title falls back to generated canonical title (cushlabs PR #134)
 - Verified all 4 detail surfaces live (EN/ES × headline/SEO title) — all canonical, zero stale strings
+- Investigated the logged "ES cards show English" debt — confirmed it is NOT debt: those are brand/product names (Unwatermark, AI Resume Tailor, CushLabs Messenger…) that intentionally mirror the EN cards per `projectCardsEs.ts` policy. No change made; item closed.
+- Fixed a real defect found during that investigation: ES detail copy for ~9 projects in `projectDetails.ts` was written entirely WITHOUT accents (~300 corrections) — es-MX standard violation (cushlabs PR #136, deployed + verified live)
 
 ### Decisions Made
 
@@ -25,6 +27,7 @@ Entries are newest-first. Each entry documents one Claude Code working session.
 - EN now single-sources from generated `title` (card, detail headline, SEO title all derive from it); ES now single-sources from `ES_TITLE_BIOJALISCO_PITCH` const
 - ES consolidated via a scoped named constant rather than changing the shared ES fallback chain — the fallback change would have altered ES card titles for ~6 other projects (mazebreak-wiki, ny-eng, cushlabs-scrollytelling, ai-resume-tailor, etc.)
 - Hand-edited the two `*.generated.json` files rather than re-running the full generation pipeline (pipeline scans all repos + GitHub API; hand-edit matches what a regen reproduces from the fixed PORTFOLIO.md source)
+- ES diacritics fixed with a dictionary-driven script (nspell + dictionary-es): only changed words whose unaccented form is invalid Spanish but valid once accented — complete + safe (leaves valid words, English tech terms, brands). Context homographs (ano→año, ingles→inglés, verb esta→está, mas→más, Desafio→Desafío) fixed by hand. Brands kept unaccented: Neon, Claude Vision, ingestion, manager, union. Scoped to ES-block lines only so EN copy in the same file was never touched.
 
 ### Immediate Next Steps
 
@@ -32,7 +35,8 @@ Entries are newest-first. Each entry documents one Claude Code working session.
 
 ### Technical Debt
 
-- ES titles for OTHER projects still render English on ES cards where they lack an esCard override but have an es.headline (mazebreak-wiki, ny-eng, cushlabs-scrollytelling, cushlabs-ai-unwatermark, react-vite-tailwind-base, ai-resume-tailor) — a shared ES fallback-chain fix would address all at once but changes 6 projects' rendering; deferred as its own focused change
+- None outstanding from this session. (The previously-logged "ES cards show English" item was investigated and closed as non-debt — brand names by design. ES detail diacritics now fixed + verified.)
+- Minor/low-impact: Spanish _tilde diacrítica_ on monosyllable homographs (él/sí/mí/sé) in `projectDetails.ts` ES copy was not exhaustively reviewed — only the high-impact missing-word accents and the common homographs (esta/tú/más/aún) were corrected. No known incorrect instance; flagged for completeness.
 - cushlabs PostToolUse formatter (Prettier) reformatted the generated JSON on save (compacted arrays, ~400 line cosmetic diff); next pipeline regen may produce a large reformat diff again — pre-existing, harmless
 
 ### Open Questions / Blockers
