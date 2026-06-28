@@ -15,20 +15,24 @@ Entries are newest-first. Each entry documents one Claude Code working session.
 - biojalisco-pitch: set source `PORTFOLIO.md:10` title (PR #14, squash-merged; portfolio.md excluded from Vercel build so no deploy spent)
 - cushlabs: updated `projects.generated.json`, `skills.generated.json`, `projectCardsEs.ts`, `projectDetails.ts` (EN+ES headlines), `es/projects/[slug].astro` ES SEO title (PR #132, squash-merged → production deploy Ready, verified live on detail page)
 - Fixed factual error in cushlabs EN+ES SEO meta descriptions claiming the site was "Built with Next.js" — corrected to self-contained HTML5 (this project has zero Next.js)
+- Made ES title single-source: new `src/data/esCanonicalTitles.ts` exports `ES_TITLE_BIOJALISCO_PITCH`, referenced by all 3 ES surfaces (card, detail headline, SEO title) so they can't drift (cushlabs PR #133)
+- Caught + fixed a 4th drift point via live verification: EN detail SEO `<title>` still rendered "BioJalisco — Biodiversity Atlas" (stale `metaTitles` override in `projects/[slug].astro` missed first pass — only EN descriptions were checked, not EN titles). Removed it so EN SEO title falls back to generated canonical title (cushlabs PR #134)
+- Verified all 4 detail surfaces live (EN/ES × headline/SEO title) — all canonical, zero stale strings
 
 ### Decisions Made
 
 - Title word order: brand-first ("BioJalisco — Cinematic Scrollytelling…") over technique-first, per Robert's pick — fixes the awkward grammar of his initial "Scrollytelling Cinematic for BioJalisco pitch" while keeping the cinematic-scrollytelling skill signal
-- EN card/detail/SEO now all derive from the single generated `title`, so they can't diverge again; ES retains 3 hand-maintained overrides (aligned but structurally separate by the portfolio's existing design)
+- EN now single-sources from generated `title` (card, detail headline, SEO title all derive from it); ES now single-sources from `ES_TITLE_BIOJALISCO_PITCH` const
+- ES consolidated via a scoped named constant rather than changing the shared ES fallback chain — the fallback change would have altered ES card titles for ~6 other projects (mazebreak-wiki, ny-eng, cushlabs-scrollytelling, ai-resume-tailor, etc.)
 - Hand-edited the two `*.generated.json` files rather than re-running the full generation pipeline (pipeline scans all repos + GitHub API; hand-edit matches what a regen reproduces from the fixed PORTFOLIO.md source)
 
 ### Immediate Next Steps
 
-- [ ] Eyeball the live portfolio card visually (curl couldn't confirm — list is client-hydrated): https://www.cushlabs.ai/portfolio/
+- [ ] Eyeball the live portfolio cards visually (curl can't — lists are client-hydrated; data sources verified canonical): https://www.cushlabs.ai/portfolio/ and https://www.cushlabs.ai/es/portfolio/
 
 ### Technical Debt
 
-- ES title still lives in 3 separate hand-maintained spots (projectCardsEs.ts, projectDetails.ts ES headline, es [slug].astro metaTitle) — true zero-drift would require folding ES overrides into generated data, a cross-project portfolio refactor out of scope here
+- ES titles for OTHER projects still render English on ES cards where they lack an esCard override but have an es.headline (mazebreak-wiki, ny-eng, cushlabs-scrollytelling, cushlabs-ai-unwatermark, react-vite-tailwind-base, ai-resume-tailor) — a shared ES fallback-chain fix would address all at once but changes 6 projects' rendering; deferred as its own focused change
 - cushlabs PostToolUse formatter (Prettier) reformatted the generated JSON on save (compacted arrays, ~400 line cosmetic diff); next pipeline regen may produce a large reformat diff again — pre-existing, harmless
 
 ### Open Questions / Blockers
