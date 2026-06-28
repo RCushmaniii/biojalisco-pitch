@@ -87,3 +87,10 @@ Both the pitch site and Species Identifier are deployed and functional. Species 
 - **Species Identifier**: Requires `OPENAI_API_KEY` environment variable
   - Local: set in `.env` file or shell environment
   - Production: set in Vercel dashboard (Settings → Environment Variables)
+
+
+## Session Log
+
+A running log of all working sessions is maintained at `docs/SESSION_LOG.md`.
+Always append a new entry at the top of this file before closing a session.
+Use the `session-logger` skill to generate the entry.

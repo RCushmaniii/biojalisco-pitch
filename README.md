@@ -1,4 +1,4 @@
-# BioJalisco — Biodiversity Atlas Pitch Site
+# BioJalisco — Scrollytelling Pitch Site
 
 ![HTML5](https://img.shields.io/badge/HTML5-Single_File-E34F26?logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-Custom_Properties-1572B6?logo=css3&logoColor=white)
@@ -61,10 +61,10 @@ Share these for a hands-free, auto-narrated experience:
 
 ### URL Parameters
 
-| Parameter | Values | Effect |
-|-----------|--------|--------|
-| `mode` | `prez` | Skips overlay, auto-launches narrated presentation |
-| `lang` | `es`, `en` | Sets language (overrides browser detection) |
+| Parameter | Values     | Effect                                             |
+| --------- | ---------- | -------------------------------------------------- |
+| `mode`    | `prez`     | Skips overlay, auto-launches narrated presentation |
+| `lang`    | `es`, `en` | Sets language (overrides browser detection)        |
 
 ### Try These Interactions
 
@@ -140,16 +140,16 @@ The pitch site requires no environment variables. The Species Identifier require
 
 ## Results
 
-| Metric | Value |
-|--------|-------|
-| Pitch site file size | ~1.8MB (self-contained) |
-| Image optimization | 92% reduction (16.8MB → 1.3MB) |
-| External dependencies | 0 for pitch site (fonts loaded async) |
-| Build step | None |
-| Languages supported | 2 (Spanish, English) |
-| Species ID confidence | 0-100% with visual gauge |
-| Species ID data | Taxonomy, ecology, geography, conservation, similar species |
-| Time to deploy | Instant (static + serverless) |
+| Metric                | Value                                                       |
+| --------------------- | ----------------------------------------------------------- |
+| Pitch site file size  | ~1.8MB (self-contained)                                     |
+| Image optimization    | 92% reduction (16.8MB → 1.3MB)                              |
+| External dependencies | 0 for pitch site (fonts loaded async)                       |
+| Build step            | None                                                        |
+| Languages supported   | 2 (Spanish, English)                                        |
+| Species ID confidence | 0-100% with visual gauge                                    |
+| Species ID data       | Taxonomy, ecology, geography, conservation, similar species |
+| Time to deploy        | Instant (static + serverless)                               |
 
 The site serves as both a stakeholder pitch and a demonstration of what focused web development can achieve. The Species Identifier showcases AI integration as a preview of BioJalisco's citizen-science capabilities.
 
@@ -173,4 +173,4 @@ Proprietary — CushLabs AI Services. See LICENSE file for details.
 
 ---
 
-*Last Updated: 2026-03-06*
+_Last Updated: 2026-03-06_

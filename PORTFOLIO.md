@@ -1,13 +1,13 @@
 ---
 # =============================================================================
-# PORTFOLIO.md — BioJalisco Pitch Site
+# PORTFOLIO.md — BioJalisco Scrollytelling Pitch Site
 # =============================================================================
 portfolio_enabled: true
 portfolio_priority: 12
 portfolio_featured: false
 portfolio_last_reviewed: "2026-03-06"
 
-title: "BioJalisco — Biodiversity Atlas Pitch Site + Species Identifier"
+title: "Scrollytelling Pitch Site — BioJalisco Biodiversity Vision"
 tagline: "Cinematic scrollytelling pitch site with AI-powered species identification for western Mexico's biodiversity platform"
 slug: "biojalisco-pitch"
 
