@@ -5,7 +5,7 @@
 portfolio_enabled: true
 portfolio_priority: 12
 portfolio_featured: false
-portfolio_last_reviewed: "2026-03-06"
+portfolio_last_reviewed: "2026-09-13"
 
 title: "BioJalisco — Cinematic Scrollytelling Pitch Site"
 tagline: "Cinematic scrollytelling pitch site with AI-powered species identification for western Mexico's biodiversity platform"
